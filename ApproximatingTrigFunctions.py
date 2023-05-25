@@ -12,15 +12,33 @@ returns: converted angle value
 
 
 def convertAngle(angleValue):
-    # Reduce the angle value to the range of 0 to 2π
-    angleValue = angleValue % (2 * PI)
-    
-    # Convert the angle value to the range of 0 to π/4
-    if angleValue > PI/4:
-        angleValue = PI - angleValue
-    
-    return angleValue
+    convertedValue = 0
+    while angleValue >= 2*PI:
+        convertedValue = angleValue-(2*PI)
+        if convertedValue < 2*PI:
+            break
+    while angleValue < 0:
+        convertedValue = angleValue+(2*PI)
+        if convertedValue > 0:
+            break
+    if angleValue >= 0 and angleValue < PI/4:
+        convertedValue = angleValue
+    if angleValue > PI/4 and angleValue <= PI/2:
+        convertedValue = PI/2 - angleValue
+    if angleValue > PI/2 and angleValue <= (3*PI)/4:
+        convertedValue = angleValue - PI/2
+    if angleValue > (3*PI)/4 and angleValue <= PI:
+        convertedValue = PI - angleValue
+    if angleValue > PI and angleValue <= (5*PI)/4:
+        convertedValue = angleValue - PI
+    if angleValue > (5*PI)/4 and angleValue <= (3*PI)/2:
+        convertedValue = (3*PI)/2 - angleValue
+    if angleValue > (3*PI)/2 and angleValue <= (7*PI)/4:
+        convertedValue = angleValue - (3*PI)/2
+    if angleValue > (7*PI)/4 and angleValue < 2*PI:
+        convertedValue = 2*PI - angleValue
 
+    return convertedValue
 
 
 """
@@ -31,8 +49,10 @@ returns: quadrant of the angle
 
 
 def findQuadrant(angle):
-    if angle >= 2*PI:
-        angle = angle % (2 * PI)
+    while angle >= 2*PI:
+        angle = angle-(2*PI)
+        if angle < 2*PI:
+            break
     if angle >= 0 and angle < PI/2:
         return 1
     elif angle >= PI/2 and angle < PI:
@@ -119,7 +139,6 @@ def factorial(x):
         return 1
     else:
         return x * factorial(x-1)
-
 
 print("This program finds the values of trigonometric functions. \n1. sin(x) \n2. cos(x) \n3. tan(x)\n")
 functionChoice = int(
