@@ -32,13 +32,14 @@ def convertAngle(angleValue):
     if angleValue > PI and angleValue <= (5*PI)/4:
         convertedValue = angleValue - PI
     if angleValue > (5*PI)/4 and angleValue <= (3*PI)/2:
-        convertedValue = angleValue - (3*PI)/2
+        convertedValue = (3*PI)/2 - angleValue
     if angleValue > (3*PI)/2 and angleValue <= (7*PI)/4:
-        convertedValue = (3*PI)/2 - angleValue 
+        convertedValue = angleValue - (3*PI)/2
     if angleValue > (7*PI)/4 and angleValue < 2*PI:
         convertedValue = 2*PI - angleValue
 
     return angleValue
+
 
 
 """
