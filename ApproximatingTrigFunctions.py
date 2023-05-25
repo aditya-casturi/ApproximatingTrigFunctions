@@ -12,16 +12,31 @@ returns: converted angle value
 
 
 def convertAngle(angleValue):
-    # Reduce angle to the range 0 to 2π
-    angleValue %= 2 * PI
-
-    # Reduce angle to the range 0 to π/2
-    while angleValue > PI / 2:
-        angleValue -= PI
-
-    # Reduce angle to the range 0 to π/4
-    if angleValue > PI / 4:
-        angleValue = PI / 2 - angleValue
+    convertedValue = 0
+    while angleValue >= 2*PI:
+        convertedValue = angleValue-(2*PI)
+        if convertedValue < 2*PI:
+            break
+    while angleValue < 0:
+        convertedValue = angleValue+(2*PI)
+        if convertedValue > 0:
+            break
+    if angleValue >= 0 and angleValue < PI/4:
+        convertedValue = angleValue
+    if angleValue > PI/4 and angleValue <= PI/2:
+        convertedValue = PI/2 - angleValue
+    if angleValue > PI/2 and angleValue <= (3*PI)/4:
+        convertedValue = angleValue - PI/2
+    if angleValue > (3*PI)/4 and angleValue <= PI:
+        convertedValue = PI - angleValue
+    if angleValue > PI and angleValue <= (5*PI)/4:
+        convertedValue = angleValue - PI
+    if angleValue > (5*PI)/4 and angleValue <= (3*PI)/2:
+        convertedValue = angleValue - (3*PI)/2
+    if angleValue > (3*PI)/2 and angleValue <= (7*PI)/4:
+        convertedValue = (3*PI)/2 - angleValue 
+    if angleValue > (7*PI)/4 and angleValue < 2*PI:
+        convertedValue = 2*PI - angleValue
 
     return angleValue
 
