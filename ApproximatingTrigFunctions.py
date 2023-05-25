@@ -42,6 +42,28 @@ def convertAngle(angleValue):
 
 
 """
+finds the quadrant of the inputted angle value
+parameter: converted angle value
+returns: quadrant of the angle
+"""
+
+
+def findQuadrant(angle):
+    while angle >= 2*PI:
+        angle = angle-(2*PI)
+        if angle < 2*PI:
+            break
+    if angle >= 0 and angle < PI/2:
+        return 1
+    elif angle >= PI/2 and angle < PI:
+        return 2
+    elif angle >= PI and angle < 3*PI/2:
+        return 3
+    elif angle >= 3*PI/2 and angle < 2*PI:
+        return 4
+
+
+"""
 evaluate the sine of an angle between 0 to pi/4 using the polynomial approximation of sin(x)
 parameter: converted angle value
 returns: sine value of the angle
@@ -67,8 +89,8 @@ returns: appropriate trig value of the angle
 """
 
 
-def evaluateTrigValue(angleVal, functionChoice):
-    sine = evalSin(angleVal)
+def evaluateTrigValue(convertedAngleVal, functionChoice):
+    sine = evalSin(convertedAngleVal)
 
     if functionChoice == 1:
         return sine
@@ -127,11 +149,18 @@ while functionChoice > 3 or functionChoice < 1:
 
 originalAngleVal = float(input("\nEnter the angle x in radians: "))
 convertedAngleVal = convertAngle(originalAngleVal)
+quadrant = findQuadrant(convertedAngleVal)
 trigVal = evaluateTrigValue(convertedAngleVal, functionChoice)
 
 if functionChoice == 1:
+    if quadrant == 3 or quadrant == 4:
+        trigVal = '-' + str(trigVal)
     print("sin(", originalAngleVal, ") = ", trigVal, sep="")
 elif functionChoice == 2:
+    if quadrant == 2 or quadrant == 3:
+        trigVal = '-' + str(trigVal)
     print("cos(", originalAngleVal, ") = ", trigVal, sep="")
 elif functionChoice == 3:
+    if quadrant == 2 or quadrant == 4:
+        trigVal = '-' + str(trigVal)
     print("tan(", originalAngleVal, ") = ", trigVal, sep="")
