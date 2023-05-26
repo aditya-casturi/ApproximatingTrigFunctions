@@ -32,7 +32,7 @@ def fitAngleToRange(angle):
         return 2 * PI - angle
 
 
-def undoAngleFit(angle, sinValue):
+def adjustSine(angle, sinValue):
     """
     Maps a sine value back to the original sine value before it was transformed by the fitAngleToRange function.
 
@@ -43,22 +43,22 @@ def undoAngleFit(angle, sinValue):
     Returns:
         float: The original sine value before it was transformed by the fitAngleToRange function.
     """
-    x = angle % (2 * PI)
-    if 0 <= x <= PI / 4:
+    theta = angle % (2 * PI)
+    if 0 <= theta <= PI / 4:
         return sinValue
-    if PI / 4 < x <= PI / 2:
+    if PI / 4 < theta <= PI / 2:
         return cos(angle, sinValue)
-    if PI / 2 < x <= 3 * PI / 4:
+    if PI / 2 < theta <= 3 * PI / 4:
         return cos(angle, sinValue)
-    if 3 * PI / 4 < x <= PI:
+    if 3 * PI / 4 < theta <= PI:
         return sinValue
-    if PI < x <= 5 * PI / 4:
+    if PI < theta <= 5 * PI / 4:
         return -sinValue
-    if 5 * PI / 4 < x <= 3 * PI / 2:
+    if 5 * PI / 4 < theta <= 3 * PI / 2:
         return -cos(angle, sinValue)
-    if 3 * PI / 2 < x <= 7 * PI / 4:
+    if 3 * PI / 2 < theta <= 7 * PI / 4:
         return -cos(angle, sinValue)
-    if 7 * PI / 4 < x <= 2 * PI:
+    if 7 * PI / 4 < theta <= 2 * PI:
         return -sinValue
 
 
@@ -82,7 +82,7 @@ def sin(angle):
         term /= factorial(1 + 2 * n)
         result += term
 
-    return undoAngleFit(angle, result)
+    return adjustSine(angle, result)
 
 
 def cos(angle, sinValue):
