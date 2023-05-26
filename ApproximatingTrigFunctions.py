@@ -1,165 +1,181 @@
 # Aditya Casturi, Henry Zhu, Honors Precalculus, 26 May 2023
 # A program to evaluate trignometric functions using the polynomial derivate of sin(x)
 
-import numpy as np
-PI = np.pi
+from numpy import pi as PI
 
-"""
-converts the inputted angle value to an equivalent value to within the range of 0 to pi/4
-parameter: inputted angle value
-returns: converted angle value
-"""
+def fitAngleToRange(angle):
+    """
+    Maps an angle value to an equivalent angle value within the range of 0 to PI/4.
 
+    Args:
+        angle (float): The angle value to be mapped.
 
-def convertAngle(angleValue):
-    convertedValue = 0
-    while angleValue >= 2*PI:
-        convertedValue = angleValue-(2*PI)
-        if convertedValue < 2*PI:
-            break
-    while angleValue < 0:
-        convertedValue = angleValue+(2*PI)
-        if convertedValue > 0:
-            break
-    if angleValue >= 0 and angleValue < PI/4:
-        convertedValue = angleValue
-    if angleValue > PI/4 and angleValue <= PI/2:
-        convertedValue = PI/2 - angleValue
-    if angleValue > PI/2 and angleValue <= (3*PI)/4:
-        convertedValue = angleValue - PI/2
-    if angleValue > (3*PI)/4 and angleValue <= PI:
-        convertedValue = PI - angleValue
-    if angleValue > PI and angleValue <= (5*PI)/4:
-        convertedValue = angleValue - PI
-    if angleValue > (5*PI)/4 and angleValue <= (3*PI)/2:
-        convertedValue = (3*PI)/2 - angleValue
-    if angleValue > (3*PI)/2 and angleValue <= (7*PI)/4:
-        convertedValue = angleValue - (3*PI)/2
-    if angleValue > (7*PI)/4 and angleValue < 2*PI:
-        convertedValue = 2*PI - angleValue
-
-    return convertedValue
+    Returns:
+        float: The equivalent angle value within the range of 0 to PI/4.
+    """
+    angle = angle % (2 * PI)
+    if 0 <= angle <= PI / 4:
+        return angle
+    if PI / 4 < angle <= PI / 2:
+        return PI / 2 - angle
+    if PI / 2 < angle <= 3 * PI / 4:
+        return angle - PI / 2
+    if 3 * PI / 4 < angle <= PI:
+        return PI - angle
+    if PI < angle <= 5 * PI / 4:
+        return angle - PI
+    if 5 * PI / 4 < angle <= 3 * PI / 2:
+        return angle - 3 * PI / 2
+    if 3 * PI / 2 < angle <= 7 * PI / 4:
+        return 3 * PI / 2 - angle
+    if 7 * PI / 4 < angle <= 2 * PI:
+        return 2 * PI - angle
 
 
-"""
-finds the quadrant of the inputted angle value
-parameter: converted angle value
-returns: quadrant of the angle
-"""
+def undoAngleFit(angle, sinValue):
+    """
+    Maps a sine value back to the original sine value before it was transformed by the fitAngleToRange function.
+
+    Args:
+        angle (float): The original angle value before it was transformed by the fitAngleToRange function.
+        sinValue (float): The sine value to be mapped back to the original sine value.
+
+    Returns:
+        float: The original sine value before it was transformed by the fitAngleToRange function.
+    """
+    x = angle % (2 * PI)
+    if 0 <= x <= PI / 4:
+        return sinValue
+    if PI / 4 < x <= PI / 2:
+        return cos(angle, sinValue)
+    if PI / 2 < x <= 3 * PI / 4:
+        return cos(angle, sinValue)
+    if 3 * PI / 4 < x <= PI:
+        return sinValue
+    if PI < x <= 5 * PI / 4:
+        return -sinValue
+    if 5 * PI / 4 < x <= 3 * PI / 2:
+        return -cos(angle, sinValue)
+    if 3 * PI / 2 < x <= 7 * PI / 4:
+        return -cos(angle, sinValue)
+    if 7 * PI / 4 < x <= 2 * PI:
+        return -sinValue
 
 
-def findQuadrant(angle):
-    while angle >= 2*PI:
-        angle = angle-(2*PI)
-        if angle < 2*PI:
-            break
-    if angle >= 0 and angle < PI/2:
-        return 1
-    elif angle >= PI/2 and angle < PI:
-        return 2
-    elif angle >= PI and angle < 3*PI/2:
-        return 3
-    elif angle >= 3*PI/2 and angle < 2*PI:
-        return 4
+def sin(angle):
+    """
+    Calculates the sine of an angle value using a polynomial expression.
 
+    Args:
+        angle (float): The angle value in radians.
 
-"""
-evaluate the sine of an angle between 0 to pi/4 using the polynomial approximation of sin(x)
-parameter: converted angle value
-returns: sine value of the angle
-"""
-
-
-def evalSin(value):
+    Returns:
+        float: The sine of the angle value.
+    """
+    inputAngle = fitAngleToRange(angle)
+    assert inputAngle is not None
     result = 0
 
     for n in range(15):
         term = (-1) ** n
-        term *= value ** (2*n + 1)
-        term /= factorial(2*n + 1)
+        term *= inputAngle ** (1 + 2 * n)
+        term /= factorial(1 + 2 * n)
         result += term
 
-    return result
+    return undoAngleFit(angle, result)
 
 
-"""
-evaluates and prints the actual trig value of the inputted angle value, accounting for angle symmetry
-parameters: converted angle value, function choice
-returns: appropriate trig value of the angle
-"""
+def cos(angle, sinValue):
+    """
+    Calculates the cosine of an angle value using the sine value and the quadrant of the angle.
+
+    Args:
+        angle (float): The angle value in radians.
+        sinValue (float): The sine of the angle value.
+
+    Returns:
+        float: The cosine of the angle value.
+    """
+    angle = angle % (2 * PI)
+
+    if PI / 2 < angle < 3 * PI / 2:
+        cos = -(1 - sinValue ** 2) ** (1 / 2)
+    else:
+        cos = (1 - sinValue ** 2) ** (1 / 2)
+
+    return cos
 
 
-def evaluateTrigValue(convertedAngleVal, functionChoice):
-    sine = evalSin(convertedAngleVal)
+def tan(angle):
+    """
+    Calculates the tangent of an angle value using the sine and cosine functions.
 
-    if functionChoice == 1:
-        return sine
-    elif functionChoice == 2:
-        return evalCos(sine)
-    elif functionChoice == 3:
-        return evalTan(sine)
+    Args:
+        angle (float): The angle value in radians.
 
-
-"""
-evaluate an angle's cosine using its sine
-parameter: sine value
-returns: cosine value
-"""
+    Returns:
+        float: The tangent of the angle value.
+    """
+    return sin(angle) / cos(angle, sin(angle))
 
 
-def evalCos(sine):
-    # Pythagorean identity: cos(x) = √(1 - sin(x)^2)
-    cosValue = (1 - sine ** 2) ** 0.5
-    return cosValue
+def factorial(n):
+    """
+    Calculates the factorial of a non-negative integer.
 
+    Args:
+        n (int): The non-negative integer to calculate the factorial of.
 
-"""
-evaluate an angle's tangent using its sine
-parameters: sine value, converted angle value
-returns: tangent value
-"""
-
-
-def evalTan(sine):
-    # tan(x) = sin(x) / cos(x)
-    cosValue = evalCos(sine)
-    tanValue = sine / cosValue
-    return tanValue
-
-
-"""
-evaluate the factorial of a number
-parameter: inputted number
-returns: factorial of the number
-"""
-
-
-def factorial(x):
-    if x == 0:
+    Returns:
+        int: The factorial of the input integer.
+    """
+    if n == 0:
         return 1
     else:
-        return x * factorial(x-1)
+        return n * factorial(n-1)
 
-print("This program finds the values of trigonometric functions. \n1. sin(x) \n2. cos(x) \n3. tan(x)\n")
-functionChoice = int(
-    input("Enter the number of the function you want to evaluate: "))
-while functionChoice > 3 or functionChoice < 1:
-    functionChoice = int(input("Invalid input; try again: "))
 
-originalAngleVal = float(input("\nEnter the angle x in radians: "))
-convertedAngleVal = convertAngle(originalAngleVal)
-quadrant = findQuadrant(originalAngleVal)
-trigVal = evaluateTrigValue(convertedAngleVal, functionChoice)
+def evaluateAndPrintOutput(angle, functionChoice):
+    """
+    Evaluates the trigonometric function specified by the input `functionChoice` for the given `angle`, and prints the result.
 
-if functionChoice == 1:
-    if quadrant == 3 or quadrant == 4:
-        trigVal = '-' + str(trigVal)
-    print("sin(", originalAngleVal, ") = ", trigVal, sep="")
-elif functionChoice == 2:
-    if quadrant == 2 or quadrant == 3:
-        trigVal = '-' + str(trigVal)
-    print("cos(", originalAngleVal, ") = ", trigVal, sep="")
-elif functionChoice == 3:
-    if quadrant == 2 or quadrant == 4:
-        trigVal = '-' + str(trigVal)
-    print("tan(", originalAngleVal, ") = ", trigVal, sep="")
+    Args:
+        angle (float): The angle value in radians.
+        functionChoice (int): The integer value representing the trigonometric function to evaluate. 
+                              1 for sine, 2 for cosine, 3 for tangent.
+
+    Returns:
+        None
+    """
+    if (functionChoice == 1):
+        print("\nsin(x) = ", sin(angle))
+    elif (functionChoice == 2):
+        print("\ncos(x) = ", cos(angle, sin(angle)))
+    else:
+        print("\ntan(x) = ", tan(angle))
+
+
+def main():
+    """
+    Prompts the user to enter an angle value and a trigonometric function choice, 
+    and evaluates and prints the result of the selected function for the given angle.
+    
+    Args:
+        None
+
+    Returns:
+        None
+    """
+    print("This program finds the values of trigonometric functions. \n1. sin(x) \n2. cos(x) \n3. tan(x)\n")
+
+    functionChoice = int(input("Enter the number of the function you want to evaluate: "))
+    while functionChoice > 3 or functionChoice < 1:
+        functionChoice = int(input("Invalid input; try again: "))
+    angle = float(input("\nEnter the angle x in radians: "))
+
+    evaluateAndPrintOutput(angle, functionChoice)
+    print("\n\n")
+
+
+if __name__ == "__main__":
+    main()
