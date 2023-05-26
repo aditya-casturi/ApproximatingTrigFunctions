@@ -25,9 +25,9 @@ def fitAngleToRange(angle):
     if PI < angle <= 5 * PI / 4:
         return angle - PI
     if 5 * PI / 4 < angle <= 3 * PI / 2:
-        return angle - 3 * PI / 2
-    if 3 * PI / 2 < angle <= 7 * PI / 4:
         return 3 * PI / 2 - angle
+    if 3 * PI / 2 < angle <= 7 * PI / 4:
+        return angle - 3 * PI / 2
     if 7 * PI / 4 < angle <= 2 * PI:
         return 2 * PI - angle
 
@@ -49,13 +49,13 @@ def adjustSine(angle, sinValue):
     if PI / 4 < theta <= PI / 2:
         return cos(angle, sinValue)
     if PI / 2 < theta <= 3 * PI / 4:
-        return cos(angle, sinValue)
+        return -cos(angle, sinValue)
     if 3 * PI / 4 < theta <= PI:
         return sinValue
     if PI < theta <= 5 * PI / 4:
         return -sinValue
     if 5 * PI / 4 < theta <= 3 * PI / 2:
-        return -cos(angle, sinValue)
+        return cos(angle, sinValue)
     if 3 * PI / 2 < theta <= 7 * PI / 4:
         return -cos(angle, sinValue)
     if 7 * PI / 4 < theta <= 2 * PI:
@@ -152,7 +152,10 @@ def evaluateAndPrintOutput(angle, functionChoice):
     elif (functionChoice == 2):
         print("\ncos(x) = ", cos(angle, sin(angle)))
     else:
-        print("\ntan(x) = ", tan(angle))
+        if round(cos(angle,sin(angle)),5) == 0:
+            print("\ntan(x) = undefined")
+        else:
+            print("\ntan(x) = ", tan(angle))
 
 
 def main():
