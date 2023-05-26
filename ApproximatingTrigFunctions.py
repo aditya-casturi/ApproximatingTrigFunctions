@@ -3,6 +3,7 @@
 
 from numpy import pi as PI
 
+
 def fitAngleToRange(angle):
     """
     Maps an angle value to an equivalent angle value within the range of 0 to PI/4.
@@ -152,7 +153,7 @@ def evaluateAndPrintOutput(angle, functionChoice):
     elif (functionChoice == 2):
         print("\ncos(x) = ", cos(angle, sin(angle)))
     else:
-        if round(cos(angle,sin(angle)),5) == 0:
+        if round(cos(angle, sin(angle)), 5) == 0:
             print("\ntan(x) = undefined")
         else:
             print("\ntan(x) = ", tan(angle))
@@ -162,7 +163,7 @@ def main():
     """
     Prompts the user to enter an angle value and a trigonometric function choice, 
     and evaluates and prints the result of the selected function for the given angle.
-    
+
     Args:
         None
 
@@ -171,13 +172,13 @@ def main():
     """
     print("This program finds the values of trigonometric functions. \n1. sin(x) \n2. cos(x) \n3. tan(x)\n")
 
-    functionChoice = int(input("Enter the number of the function you want to evaluate: "))
+    functionChoice = int(
+        input("Enter the number of the function you want to evaluate: "))
     while functionChoice > 3 or functionChoice < 1:
         functionChoice = int(input("Invalid input; try again: "))
     angle = float(input("\nEnter the angle x in radians: "))
 
     evaluateAndPrintOutput(angle, functionChoice)
-    print("\n\n")
 
 
 if __name__ == "__main__":
